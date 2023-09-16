@@ -245,6 +245,7 @@ exports.registerStudent = async (req, res) => {
 
     Promise.all(promises)
       .then(() => {
+        console.log("here");
         const insert_collection_query = `INSERT INTO amount_collection (student_id, 
          amount , month , year  , created_at ) VALUES ($1,$2,$3,$4,$5) `;
         const insert_collection_result = pool.query(insert_collection_query, [
@@ -299,7 +300,7 @@ exports.userLogin = async (req, res) => {
 
     await client.query("BEGIN");
 
-    const search_query = `SELECT * FROM "user" WHERE email = '${email}' AND password = '${password}'`;
+    const search_query = `SELECT * FROM "user" WHERE LOWER(email) = LOWER('${email}') AND password = '${password}'`;
 
     const search_result = await client.query(search_query);
 

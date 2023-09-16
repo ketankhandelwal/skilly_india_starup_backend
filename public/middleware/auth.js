@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken")
 
 exports.authenticateToken = (req, res, next) => {
   const token = req.headers?.authorization?.replace("Bearer ", "");
