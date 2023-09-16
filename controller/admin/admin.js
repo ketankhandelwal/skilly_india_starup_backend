@@ -236,8 +236,7 @@ exports.registerStudent = async (req, res) => {
           amount += search_price_result.rows[0].price;
         })
         .catch((error) => {
-          const response = formatResponse(400, error, []);
-          res.status(400).json(response);
+          console.log(error);
         });
 
       promises.push(promise);
@@ -259,7 +258,7 @@ exports.registerStudent = async (req, res) => {
         ]);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
 
     await client.query("COMMIT");
