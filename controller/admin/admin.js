@@ -243,7 +243,7 @@ exports.registerStudent = async (req, res) => {
       promises.push(promise);
     });
 
-    Promise.all(promises)
+    await Promise.all(promises)
       .then(() => {
         console.log("here");
         const insert_collection_query = `INSERT INTO amount_collection (student_id, 
