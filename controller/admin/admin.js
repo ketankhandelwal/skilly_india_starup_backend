@@ -259,8 +259,7 @@ exports.registerStudent = async (req, res) => {
         ]);
       })
       .catch((error) => {
-        const response = formatResponse(400, error, []);
-        res.status(400).json(response);
+        console.log(error)
       });
 
     await client.query("COMMIT");
