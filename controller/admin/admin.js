@@ -243,6 +243,8 @@ exports.registerStudent = async (req, res) => {
       promises.push(promise);
     });
 
+    console.log("I m heree", amount);
+
     await Promise.all(promises)
       .then(() => {
         console.log("here");
