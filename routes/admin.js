@@ -27,4 +27,10 @@ router.post(
 );
 router.post("/userLogin", adminLogic.userLogin);
 
+router.get(
+  "/getSkillPriceByClass",
+  authetication.authenticateToken,
+  adminLogic.getSkillPriceByClassId
+);
+
 module.exports = router;

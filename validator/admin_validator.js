@@ -4,6 +4,7 @@ const registeredStudents = Yup.object().shape({
   search: Yup.string().optional(),
   class_id: Yup.number().optional(),
   month: Yup.number().optional(),
+  year: Yup.number().optional()
 });
 
 const getStudentsDetailsById = Yup.object().shape({
@@ -34,10 +35,14 @@ const userLogin = Yup.object().shape({
   password: Yup.string().required(),
 });
 
+const getSkillPriceByClassId = Yup.object().shape({
+  class_id: Yup.number().required()
+})
 module.exports = {
   registeredStudents,
   getStudentsDetailsById,
   editStudentDetails,
   registerStudent,
   userLogin,
+  getSkillPriceByClassId
 };

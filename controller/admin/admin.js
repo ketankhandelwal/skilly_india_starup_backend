@@ -6,7 +6,7 @@ const adminValidator = require("../../validator/admin_validator");
 
 exports.getRegisteredStudentsDetails = async (req, res) => {
   try {
-    let { search, class_id, month } = req.query;
+    let { search, class_id, month, year } = req.query;
 
     try {
       // Validate input data against the schema
@@ -14,6 +14,7 @@ exports.getRegisteredStudentsDetails = async (req, res) => {
         search,
         class_id,
         month,
+        year,
       });
     } catch (validationError) {
       const response = formatResponse(400, validationError.errors, []);
@@ -22,6 +23,7 @@ exports.getRegisteredStudentsDetails = async (req, res) => {
     search = search || "";
     class_id = class_id || null;
     month = month || null;
+    year = year || null;
     const client = await pool.connect();
 
     await client.query("BEGIN");
@@ -39,7 +41,8 @@ WHERE
 
 (s.class_id = ${class_id} OR ${class_id} IS NULL)
 AND (LOWER(s.name) LIKE LOWER('%${search}%') OR '%${search}%' IS NULL)
-  AND (s.month = ${month} OR ${month} IS NULL);     
+  AND (s.month = ${month} OR ${month} IS NULL)
+  AND (s.year = ${year} OR ${year} IS NULL);     
 `;
 
     const getActiveStudentListResult = await client.query(
@@ -330,6 +333,51 @@ exports.userLogin = async (req, res) => {
       res.status(400).json(response);
     }
   } catch (error) {
+    const response = formatResponse(400, error, []);
+    res.status(400).json(response);
+  }
+};
+
+exports.getSkillPriceByClassId = async (req, res) => {
+  try {
+    const { class_id } = req.query;
+
+    try {
+      // Validate input data against the schema
+      await adminValidator.getSkillPriceByClassId.validate({
+        class_id,
+      });
+    } catch (validationError) {
+      const response = formatResponse(400, validationError.errors, []);
+      return res.status(400).json(response);
+    }
+    const client = await pool.connect();
+
+    await client.query("BEGIN");
+
+    const class_price_query = `SELECT  pl.skill_id,s.name, pl.price  
+    FROM price_list AS pl
+    INNER JOIN skills AS s ON pl.skill_id = s.id
+    WHERE pl.class_id = ${class_id};`;
+
+    const class_price_result = await client.query(class_price_query);
+
+    await client.query("COMMIT");
+
+    if (class_price_result?.rowCount || class_price_result.rows) {
+      const response = formatResponse(
+        200,
+        "Skills Fetched Successfully",
+        class_price_result.rows
+      );
+      res.status(200).json(response);
+    } else {
+      await client.query("ROLLBACK");
+      const response = formatResponse(400, "Something went wrong", []);
+      res.status(400).json(response);
+    }
+  } catch (error) {
+    await client.query("ROLLBACK");
     const response = formatResponse(400, error, []);
     res.status(400).json(response);
   }
