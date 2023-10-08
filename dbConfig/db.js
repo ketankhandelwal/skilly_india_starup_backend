@@ -8,7 +8,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   binary: false,
-  max: 200,
+  max: 1000,
   idleTimeoutMillis: 1000,
 });
 
