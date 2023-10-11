@@ -8,8 +8,15 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   binary: false,
-  max: 1000,
+  max: 200,
   idleTimeoutMillis: 1000,
 });
 
+pool.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database:", err);
+  } else {
+    console.log("Connected to the database");
+  }
+});
 module.exports = pool;

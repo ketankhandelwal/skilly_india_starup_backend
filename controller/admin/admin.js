@@ -61,10 +61,12 @@ AND (LOWER(s.name) LIKE LOWER('%${search}%') OR '%${search}%' IS NULL)
         getActiveStudentListResult.rows
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
@@ -109,10 +111,12 @@ FROM
         result.rows
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
@@ -157,10 +161,12 @@ exports.editStudentDetails = async (req, res) => {
         []
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
@@ -245,8 +251,6 @@ exports.registerStudent = async (req, res) => {
       promises.push(promise);
     });
 
-    console.log("I m heree", amount);
-
     await Promise.all(promises)
       .then(() => {
         console.log("here");
@@ -271,13 +275,15 @@ exports.registerStudent = async (req, res) => {
         200,
         "Student Registered Successfully",
         []
-        // insert_result.rows
+ 
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
@@ -327,10 +333,12 @@ exports.userLogin = async (req, res) => {
         token: token,
       });
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
@@ -371,10 +379,12 @@ exports.getSkillPriceByClassId = async (req, res) => {
         class_price_result.rows
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     await client.query("ROLLBACK");

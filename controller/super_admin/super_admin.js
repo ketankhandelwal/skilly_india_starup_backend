@@ -101,10 +101,12 @@ exports.collectionDetails = async (req, res) => {
         result.rows
       );
       res.status(200).json(response);
+      client.release();
     } else {
       await client.query("ROLLBACK");
       const response = formatResponse(400, "Something went wrong", []);
       res.status(400).json(response);
+      client.release();
     }
   } catch (error) {
     const response = formatResponse(400, error, []);
